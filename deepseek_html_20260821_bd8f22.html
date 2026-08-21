@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚗 Колесо слотов — авто-стиль</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(ellipse at center, #1a1a2e, #0b0b15);
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 16px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(14px);
+            padding: 28px 20px 32px;
+            border-radius: 56px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            color: #fff;
+        }
+        h1 span {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sub {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .wheel-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto 12px;
+            aspect-ratio: 1/1;
+        }
+
+        .wheel-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            border-radius: 50%;
+            box-shadow: 0 0 0 8px rgba(255, 215, 0, 0.2),
+                        0 0 0 18px rgba(255, 215, 0, 0.05),
+                        0 20px 60px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            touch-action: none;
+            transition: box-shadow 0.2s;
+        }
+        .wheel-wrap canvas:active {
+            box-shadow: 0 0 0 8px rgba(255, 215, 0, 0.4),
+                        0 0 0 18px rgba(255, 215, 0, 0.1),
+                        0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 0;
+            height: 0;
+            border-left: 24px solid transparent;
+            border-right: 24px solid transparent;
+            border-top: 48px solid #ffd700;
+            filter: drop-shadow(0 4px 20px rgba(255, 215, 0, 0.7));
+        }
+        .pointer::after {
+            content: '';
+            position: absolute;
+            top: -52px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle, #ffd700, #f7971e);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn-spin {
+            padding: 16px 40px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            box-shadow: 0 8px 32px rgba(247, 151, 30, 0.4);
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 4px 0 10px;
+            width: 100%;
+            max-width: 280px;
+        }
+        .btn-spin:hover:not(:disabled) {
+            transform: scale(1.04);
+            box-shadow: 0 12px 44px rgba(247, 151, 30, 0.6);
+        }
+        .btn-spin:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+        .btn-spin:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-box {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            min-height: 76px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .result-label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .result-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        .result-value .text {
+            background: linear-gradient(135deg, #f0f0f0, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-box.slot-empty .text { background: linear-gradient(135deg, #aaa, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .result-box.slot-5min .text { background: linear-gradient(135deg, #4ecdc4, #44b39d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .result-box.slot-10min .text { background: linear-gradient(135deg, #ff6b6b, #ee5a24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        .result-box.slot-empty { border-color: rgba(255,255,255,0.08); }
+        .result-box.slot-5min { border-color: rgba(78, 205, 196, 0.3); }
+        .result-box.slot-10min { border-color: rgba(255, 107, 107, 0.3); }
+
+        .footer {
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @media (max-width: 500px) {
+            .container { padding: 16px; }
+            h1 { font-size: 1.6rem; }
+            .btn-spin { font-size: 1.1rem; padding: 14px 24px; max-width: 100%; }
+            .result-value { font-size: 2rem; }
+            .pointer { top: -4px; border-left-width: 16px; border-right-width: 16px; border-top-width: 32px; }
+            .pointer::after { top: -36px; width: 14px; height: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚗 <span>Авто-слоты</span></h1>
+    <div class="sub">12 секторов · 10 мин · 5 мин · Пусто</div>
+
+    <div class="wheel-wrap">
+        <canvas id="wheelCanvas" width="600" height="600"></canvas>
+        <div class="pointer"></div>
+    </div>
+
+    <button class="btn-spin" id="spinBtn">🎯 Крутить</button>
+
+    <div class="result-box" id="resultBox">
+        <div class="result-label">Результат</div>
+        <div class="result-value" id="resultValue">
+            <span class="text">—</span>
+        </div>
+    </div>
+    <div class="footer">Нажмите на колесо или кнопку</div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+    (function() {
+        // ----- Элементы -----
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spinBtn');
+        const resultValue = document.getElementById('resultValue');
+        const resultBox = document.getElementById('resultBox');
+
+        // ----- Настройка слотов (12 штук) -----
+        const slotTypes = [
+            { id: '10min', label: '10 мин', color1: '#d63031', color2: '#b71c1c' },
+            { id: '5min',  label: '5 мин',  color1: '#2e9b8e', color2: '#1a6b5a' },
+            { id: 'empty', label: 'Пусто',  color1: '#5d6d7e', color2: '#3d4a5a' }
+        ];
+
+        // Создаём массив из 12 элементов: 3×10мин, 4×5мин, 5×Пусто
+        const rawSlots = [];
+        for (let i = 0; i < 3; i++) rawSlots.push(slotTypes[0]);
+        for (let i = 0; i < 4; i++) rawSlots.push(slotTypes[1]);
+        for (let i = 0; i < 5; i++) rawSlots.push(slotTypes[2]);
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        const SLOTS = shuffle(rawSlots);
+        const SEGMENTS = SLOTS.length; // 12
+
+        // ----- Параметры канваса -----
+        const W = 600, H = 600;
+        const cx = W/2, cy = H/2;
+        const radius = 265;          // внешний радиус диска (без шины)
+        const tireWidth = 36;        // ширина шины
+        const outerRadius = radius + tireWidth; // полный радиус колеса
+
+        let currentRotation = 0;
+        let isSpinning = false;
+        let animId = null;
+
+        // ----- Загрузка логотипа -----
+        const logoImg = new Image();
+        logoImg.crossOrigin = 'anonymous';
+        let logoLoaded = false;
+        logoImg.src = 'https://i.postimg.cc/14X5RxHg/IMG-6357.png';
+        logoImg.onload = () => {
+            logoLoaded = true;
+            drawWheel(currentRotation);
+        };
+        logoImg.onerror = () => {
+            // если не загрузился, будем рисовать текст
+            logoLoaded = false;
+            drawWheel(currentRotation);
+        };
+
+        // ----- Отрисовка шины (внешний круг с протектором) -----
+        function drawTire(rotation) {
+            // Шина — серая с тёмным оттенком, с рисунком протектора
+            const grad = ctx.createRadialGradient(cx-40, cy-40, 0, cx, cy, outerRadius);
+            grad.addColorStop(0, '#2c3e50');
+            grad.addColorStop(0.7, '#1a252f');
+            grad.addColorStop(1, '#0d1a21');
+            ctx.beginPath();
+            ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Рисуем протектор — мелкие прямоугольники по окружности
+            const count = 36;
+            const angleStep = (2 * Math.PI) / count;
+            const tireCenterR = radius + tireWidth/2;
+            for (let i = 0; i < count; i++) {
+                const a = i * angleStep + rotation;
+                const x1 = cx + (tireCenterR - 12) * Math.cos(a);
+                const y1 = cy + (tireCenterR - 12) * Math.sin(a);
+                const x2 = cx + (tireCenterR + 12) * Math.cos(a);
+                const y2 = cy + (tireCenterR + 12) * Math.sin(a);
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = i % 2 === 0 ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.3)';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            }
+
+            // Внутренняя граница шины (обод)
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(200,200,200,0.3)';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            // Внешняя граница
+            ctx.beginPath();
+            ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(200,200,200,0.2)';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+        }
+
+        // ----- Отрисовка диска (секторы + спицы) -----
+        function drawDisc(rotation) {
+            const angleStep = (2 * Math.PI) / SEGMENTS;
+
+            // Секторы
+            for (let i = 0; i < SEGMENTS; i++) {
+                const start = i * angleStep + rotation;
+                const end = start + angleStep;
+                const slot = SLOTS[i];
+
+                // Градиент сектора
+                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+                grad.addColorStop(0, slot.color1);
+                grad.addColorStop(1, slot.color2);
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, radius, start, end);
+                ctx.closePath();
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                // Тонкая разделительная линия
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Текст в секторе (без иконок)
+                const mid = start + angleStep / 2;
+                const textR = radius * 0.68;
+                const tx = cx + textR * Math.cos(mid);
+                const ty = cy + textR * Math.sin(mid);
+
+                ctx.save();
+                ctx.translate(tx, ty);
+                let rot = mid;
+                if (mid > Math.PI/2 && mid < 3*Math.PI/2) rot += Math.PI;
+                ctx.rotate(rot);
+
+                ctx.font = 'bold 18px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = '#fff';
+                ctx.fillText(slot.label, 0, 0);
+                ctx.shadowBlur = 0;
+                ctx.restore();
+            }
+
+            // Рисуем спицы (между секторами) — толстые линии от центра к краю
+            for (let i = 0; i < SEGMENTS; i++) {
+                const angle = i * angleStep + rotation + angleStep/2;
+                const x1 = cx + 20 * Math.cos(angle);
+                const y1 = cy + 20 * Math.sin(angle);
+                const x2 = cx + (radius - 10) * Math.cos(angle);
+                const y2 = cy + (radius - 10) * Math.sin(angle);
+
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = 'rgba(180,180,180,0.4)';
+                ctx.lineWidth = 6;
+                ctx.stroke();
+                // Блик на спице
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            // Центральный круг (ступица) — будет поверх логотипа, но логотип рисуем отдельно
+        }
+
+        // ----- Отрисовка логотипа в центре -----
+        function drawLogo() {
+            const centerR = 52; // радиус центральной зоны
+            // Фон под лого (чтобы скрыть секторы)
+            ctx.beginPath();
+            ctx.arc(cx, cy, centerR, 0, 2 * Math.PI);
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,215,0,0.5)';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            if (logoLoaded && logoImg.complete) {
+                // Рисуем логотип с обрезкой по кругу
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, centerR - 6, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.clip();
+                const size = (centerR - 6) * 2;
+                ctx.drawImage(logoImg, cx - size/2, cy - size/2, size, size);
+                ctx.restore();
+            } else {
+                // Заглушка
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 18px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Лого', cx, cy);
+            }
+
+            // Декоративный ободок
+            ctx.beginPath();
+            ctx.arc(cx, cy, centerR, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(255,215,0,0.25)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // ----- Главная функция отрисовки колеса -----
+        function drawWheel(rotation) {
+            ctx.clearRect(0, 0, W, H);
+
+            // 1. Шина (не вращается)
+            drawTire(0);
+
+            // 2. Диск с секторами (вращается)
+            drawDisc(rotation);
+
+            // 3. Логотип (не вращается)
+            drawLogo();
+
+            // Дополнительные блики (для объёма)
+            const glow = ctx.createRadialGradient(cx-80, cy-80, 0, cx, cy, outerRadius);
+            glow.addColorStop(0, 'rgba(255,255,255,0.04)');
+            glow.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.beginPath();
+            ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = glow;
+            ctx.fill();
+        }
+
+        // ----- Определение победившего слота -----
+        function getSlotIndex(rotation) {
+            const pointerAngle = -Math.PI / 2;
+            let raw = pointerAngle - rotation;
+            raw = ((raw % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+            const angleStep = (2 * Math.PI) / SEGMENTS;
+            return Math.floor(raw / angleStep) % SEGMENTS;
+        }
+
+        // ----- Обновить результат -----
+        function updateResult(index) {
+            const slot = SLOTS[index];
+            resultValue.innerHTML = `<span class="text">${slot.label}</span>`;
+            resultBox.className = 'result-box slot-' + slot.id;
+        }
+
+        // ----- Анимация вращения -----
+        function spinWheel() {
+            if (isSpinning) return;
+            if (!logoLoaded) {
+                // Если лого ещё не загружен, можно всё равно крутить, но предупредим
+                console.warn('Логотип ещё не загружен, но колесо работает');
+            }
+            isSpinning = true;
+            spinBtn.disabled = true;
+
+            const extraSpins = 5 + Math.random() * 5;
+            const targetAngle = currentRotation + extraSpins * 2 * Math.PI + (Math.random() * 2 * Math.PI);
+            const startAngle = currentRotation;
+            const duration = 5500 + Math.random() * 2000;
+            const startTime = performance.now();
+
+            function animate(time) {
+                const elapsed = time - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+
+                currentRotation = startAngle + (targetAngle - startAngle) * eased;
+                drawWheel(currentRotation);
+
+                if (progress < 1) {
+                    animId = requestAnimationFrame(animate);
+                } else {
+                    currentRotation = targetAngle;
+                    drawWheel(currentRotation);
+                    const idx = getSlotIndex(currentRotation);
+                    updateResult(idx);
+                    launchConfetti();
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                }
+            }
+            animId = requestAnimationFrame(animate);
+        }
+
+        // ----- Конфетти (без изменений) -----
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const cctx = confettiCanvas.getContext('2d');
+        let confettiPieces = [];
+        let confettiAnimId = null;
+
+        function resizeConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfetti);
+        resizeConfetti();
+
+        function launchConfetti() {
+            confettiPieces = [];
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#ff8a5c', '#a29bfe', '#fd79a8', '#00b894', '#fdcb6e', '#e17055'];
+            for (let i = 0; i < 180; i++) {
+                confettiPieces.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    w: 6 + Math.random() * 8,
+                    h: 4 + Math.random() * 6,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: 2 + Math.random() * 4,
+                    rot: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 12,
+                    gravity: 0.04 + Math.random() * 0.04,
+                });
+            }
+            if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            let alive = false;
+            for (const p of confettiPieces) {
+                p.x += p.vx;
+                p.vy += p.gravity;
+                p.y += p.vy;
+                p.rot += p.rotSpeed;
+                if (p.y < confettiCanvas.height + 20) alive = true;
+                cctx.save();
+                cctx.translate(p.x, p.y);
+                cctx.rotate((p.rot * Math.PI) / 180);
+                cctx.fillStyle = p.color;
+                cctx.globalAlpha = Math.max(0, 1 - (p.y / confettiCanvas.height) * 0.5);
+                cctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                cctx.restore();
+            }
+            if (alive) {
+                confettiAnimId = requestAnimationFrame(animateConfetti);
+            } else {
+                cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        // ----- Инициализация -----
+        function init() {
+            // Начинаем с нулевого вращения
+            currentRotation = 0;
+            drawWheel(0);
+            updateResult(0);
+        }
+
+        // ----- События -----
+        spinBtn.addEventListener('click', spinWheel);
+        canvas.addEventListener('click', spinWheel);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            spinWheel();
+        }, { passive: false });
+
+        resultBox.addEventListener('click', () => {
+            if (confettiAnimId) {
+                cancelAnimationFrame(confettiAnimId);
+                confettiAnimId = null;
+                cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        });
+
+        // Запуск после загрузки логотипа (или сразу)
+        if (logoImg.complete && logoImg.naturalWidth) {
+            logoLoaded = true;
+        }
+        // Всё равно вызываем init, лого отрисуется, когда загрузится
+        init();
+
+        console.log('🚗 Автомобильное колесо-рулетка загружено!');
+    })();
+</script>
+</body>
+</html>
