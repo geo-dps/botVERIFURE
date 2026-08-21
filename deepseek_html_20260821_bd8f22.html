@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="ru"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🚗 Колесо слотов — авто-стиль</title>
+
+    <!-- Предзагрузка логотипа для верхнего отображения -->
+    <link rel="preload" as="image" href="https://i.postimg.cc/14X5RxHg/IMG-6357.png" fetchpriority="high">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             min-height: 100vh;
@@ -27,6 +33,23 @@
             max-width: 600px;
             width: 100%;
             text-align: center;
+        }
+
+        /* ——— Логотип сверху ——— */
+        .top-logo {
+            display: block;
+            margin: 0 auto 10px auto;
+            max-width: 130px;
+            width: auto;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px;
+            transition: transform 0.2s;
+        }
+        .top-logo:hover {
+            transform: scale(1.03);
         }
 
         h1 {
@@ -65,16 +88,16 @@
             display: block;
             border-radius: 50%;
             box-shadow: 0 0 0 8px rgba(255, 215, 0, 0.2),
-                        0 0 0 18px rgba(255, 215, 0, 0.05),
-                        0 20px 60px rgba(0, 0, 0, 0.6);
+                0 0 0 18px rgba(255, 215, 0, 0.05),
+                0 20px 60px rgba(0, 0, 0, 0.6);
             cursor: pointer;
             touch-action: none;
             transition: box-shadow 0.2s;
         }
         .wheel-wrap canvas:active {
             box-shadow: 0 0 0 8px rgba(255, 215, 0, 0.4),
-                        0 0 0 18px rgba(255, 215, 0, 0.1),
-                        0 20px 60px rgba(0, 0, 0, 0.6);
+                0 0 0 18px rgba(255, 215, 0, 0.1),
+                0 20px 60px rgba(0, 0, 0, 0.6);
         }
 
         .pointer {
@@ -171,13 +194,34 @@
             background-clip: text;
         }
 
-        .result-box.slot-empty .text { background: linear-gradient(135deg, #aaa, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .result-box.slot-5min .text { background: linear-gradient(135deg, #4ecdc4, #44b39d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .result-box.slot-10min .text { background: linear-gradient(135deg, #ff6b6b, #ee5a24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .result-box.slot-empty .text {
+            background: linear-gradient(135deg, #aaa, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .result-box.slot-5min .text {
+            background: linear-gradient(135deg, #4ecdc4, #44b39d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .result-box.slot-10min .text {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-        .result-box.slot-empty { border-color: rgba(255,255,255,0.08); }
-        .result-box.slot-5min { border-color: rgba(78, 205, 196, 0.3); }
-        .result-box.slot-10min { border-color: rgba(255, 107, 107, 0.3); }
+        .result-box.slot-empty {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .result-box.slot-5min {
+            border-color: rgba(78, 205, 196, 0.3);
+        }
+        .result-box.slot-10min {
+            border-color: rgba(255, 107, 107, 0.3);
+        }
 
         .footer {
             color: rgba(255, 255, 255, 0.12);
@@ -195,422 +239,450 @@
         }
 
         @media (max-width: 500px) {
-            .container { padding: 16px; }
-            h1 { font-size: 1.6rem; }
-            .btn-spin { font-size: 1.1rem; padding: 14px 24px; max-width: 100%; }
-            .result-value { font-size: 2rem; }
-            .pointer { top: -4px; border-left-width: 16px; border-right-width: 16px; border-top-width: 32px; }
-            .pointer::after { top: -36px; width: 14px; height: 14px; }
+            .container {
+                padding: 16px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .btn-spin {
+                font-size: 1.1rem;
+                padding: 14px 24px;
+                max-width: 100%;
+            }
+            .result-value {
+                font-size: 2rem;
+            }
+            .pointer {
+                top: -4px;
+                border-left-width: 16px;
+                border-right-width: 16px;
+                border-top-width: 32px;
+            }
+            .pointer::after {
+                top: -36px;
+                width: 14px;
+                height: 14px;
+            }
+            .top-logo {
+                max-width: 100px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🚗 <span>Авто-слоты</span></h1>
-    <div class="sub">12 секторов · 10 мин · 5 мин · Пусто</div>
+    <div class="container">
+        <!-- ★ Логотип сверху (остаётся) -->
+        <img class="top-logo" src="https://i.postimg.cc/14X5RxHg/IMG-6357.png" alt="Логотип">
 
-    <div class="wheel-wrap">
-        <canvas id="wheelCanvas" width="600" height="600"></canvas>
-        <div class="pointer"></div>
-    </div>
+        
+        <div class="sub">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀м</div>
 
-    <button class="btn-spin" id="spinBtn">🎯 Крутить</button>
-
-    <div class="result-box" id="resultBox">
-        <div class="result-label">Результат</div>
-        <div class="result-value" id="resultValue">
-            <span class="text">—</span>
+        <div class="wheel-wrap">
+            <canvas id="wheelCanvas" width="600" height="600"></canvas>
+            <div class="pointer"></div>
         </div>
+
+        <button class="btn-spin" id="spinBtn">🎯 Крутить</button>
+
+        <div class="result-box slot-10min" id="resultBox">
+            <div class="result-label">Результат</div>
+            <div class="result-value" id="resultValue"><span class="text">10 мин</span></div>
+        </div>
+        <div class="footer">Нажмите на колесо или кнопку</div>
     </div>
-    <div class="footer">Нажмите на колесо или кнопку</div>
-</div>
 
-<canvas id="confetti-canvas"></canvas>
+    <canvas id="confetti-canvas" width="608" height="658"></canvas>
 
-<script>
-    (function() {
-        // ----- Элементы -----
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const spinBtn = document.getElementById('spinBtn');
-        const resultValue = document.getElementById('resultValue');
-        const resultBox = document.getElementById('resultBox');
+    <script>
+        (function() {
+            // ----- Элементы -----
+            const canvas = document.getElementById('wheelCanvas');
+            const ctx = canvas.getContext('2d');
+            const spinBtn = document.getElementById('spinBtn');
+            const resultValue = document.getElementById('resultValue');
+            const resultBox = document.getElementById('resultBox');
 
-        // ----- Настройка слотов (12 штук) -----
-        const slotTypes = [
-            { id: '10min', label: '10 мин', color1: '#d63031', color2: '#b71c1c' },
-            { id: '5min',  label: '5 мин',  color1: '#2e9b8e', color2: '#1a6b5a' },
-            { id: 'empty', label: 'Пусто',  color1: '#5d6d7e', color2: '#3d4a5a' }
-        ];
+            // ----- Настройка слотов (12 штук) -----
+            const slotTypes = [
+                { id: '10min', label: '10 мин', color1: '#d63031', color2: '#b71c1c' },
+                { id: '5min', label: '5 мин', color1: '#2e9b8e', color2: '#1a6b5a' },
+                { id: 'empty', label: 'Пусто', color1: '#5d6d7e', color2: '#3d4a5a' }
+            ];
 
-        // Создаём массив из 12 элементов: 3×10мин, 4×5мин, 5×Пусто
-        const rawSlots = [];
-        for (let i = 0; i < 3; i++) rawSlots.push(slotTypes[0]);
-        for (let i = 0; i < 4; i++) rawSlots.push(slotTypes[1]);
-        for (let i = 0; i < 5; i++) rawSlots.push(slotTypes[2]);
+            // Создаём массив из 12 элементов: 3×10мин, 4×5мин, 5×Пусто
+            const rawSlots = [];
+            for (let i = 0; i < 3; i++) rawSlots.push(slotTypes[0]);
+            for (let i = 0; i < 4; i++) rawSlots.push(slotTypes[1]);
+            for (let i = 0; i < 5; i++) rawSlots.push(slotTypes[2]);
 
-        function shuffle(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+            function shuffle(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
             }
-            return arr;
-        }
-        const SLOTS = shuffle(rawSlots);
-        const SEGMENTS = SLOTS.length; // 12
+            const SLOTS = shuffle(rawSlots);
+            const SEGMENTS = SLOTS.length; // 12
 
-        // ----- Параметры канваса -----
-        const W = 600, H = 600;
-        const cx = W/2, cy = H/2;
-        const radius = 265;          // внешний радиус диска (без шины)
-        const tireWidth = 36;        // ширина шины
-        const outerRadius = radius + tireWidth; // полный радиус колеса
+            // ----- Параметры канваса -----
+            const W = 600,
+                H = 600;
+            const cx = W / 2,
+                cy = H / 2;
+            const radius = 265;
+            const tireWidth = 36;
+            const outerRadius = radius + tireWidth;
 
-        let currentRotation = 0;
-        let isSpinning = false;
-        let animId = null;
+            let currentRotation = 0;
+            let isSpinning = false;
+            let animId = null;
 
-        // ----- Загрузка логотипа -----
-        const logoImg = new Image();
-        logoImg.crossOrigin = 'anonymous';
-        let logoLoaded = false;
-        logoImg.src = 'https://i.postimg.cc/14X5RxHg/IMG-6357.png';
-        logoImg.onload = () => {
-            logoLoaded = true;
-            drawWheel(currentRotation);
-        };
-        logoImg.onerror = () => {
-            // если не загрузился, будем рисовать текст
-            logoLoaded = false;
-            drawWheel(currentRotation);
-        };
+            // ----- Таймер ожидания (1 минута) -----
+            let cooldownUntil = 0;
+            let cooldownInterval = null;
 
-        // ----- Отрисовка шины (внешний круг с протектором) -----
-        function drawTire(rotation) {
-            // Шина — серая с тёмным оттенком, с рисунком протектора
-            const grad = ctx.createRadialGradient(cx-40, cy-40, 0, cx, cy, outerRadius);
-            grad.addColorStop(0, '#2c3e50');
-            grad.addColorStop(0.7, '#1a252f');
-            grad.addColorStop(1, '#0d1a21');
-            ctx.beginPath();
-            ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
-            ctx.fillStyle = grad;
-            ctx.fill();
+            // ----- Загрузка логотипа (только для верхнего, в центре не используется) -----
+            // Но оставляем загрузку, чтобы не было ошибок, если где-то ссылаемся
+            const logoImg = new Image();
+            logoImg.crossOrigin = 'anonymous';
+            logoImg.src = 'https://i.postimg.cc/14X5RxHg/IMG-6357.png';
 
-            // Рисуем протектор — мелкие прямоугольники по окружности
-            const count = 36;
-            const angleStep = (2 * Math.PI) / count;
-            const tireCenterR = radius + tireWidth/2;
-            for (let i = 0; i < count; i++) {
-                const a = i * angleStep + rotation;
-                const x1 = cx + (tireCenterR - 12) * Math.cos(a);
-                const y1 = cy + (tireCenterR - 12) * Math.sin(a);
-                const x2 = cx + (tireCenterR + 12) * Math.cos(a);
-                const y2 = cy + (tireCenterR + 12) * Math.sin(a);
+            // ----- Отрисовка шины (реалистичная) -----
+            function drawTire(rotation) {
+                // Основной круг шины
+                const grad = ctx.createRadialGradient(cx - 40, cy - 40, 0, cx, cy, outerRadius);
+                grad.addColorStop(0, '#3a3f4a');
+                grad.addColorStop(0.6, '#1e232b');
+                grad.addColorStop(1, '#0a0d12');
                 ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.strokeStyle = i % 2 === 0 ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.3)';
-                ctx.lineWidth = 4;
-                ctx.stroke();
-            }
-
-            // Внутренняя граница шины (обод)
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = 'rgba(200,200,200,0.3)';
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            // Внешняя граница
-            ctx.beginPath();
-            ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
-            ctx.strokeStyle = 'rgba(200,200,200,0.2)';
-            ctx.lineWidth = 4;
-            ctx.stroke();
-        }
-
-        // ----- Отрисовка диска (секторы + спицы) -----
-        function drawDisc(rotation) {
-            const angleStep = (2 * Math.PI) / SEGMENTS;
-
-            // Секторы
-            for (let i = 0; i < SEGMENTS; i++) {
-                const start = i * angleStep + rotation;
-                const end = start + angleStep;
-                const slot = SLOTS[i];
-
-                // Градиент сектора
-                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-                grad.addColorStop(0, slot.color1);
-                grad.addColorStop(1, slot.color2);
-
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.arc(cx, cy, radius, start, end);
-                ctx.closePath();
+                ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
                 ctx.fillStyle = grad;
                 ctx.fill();
 
-                // Тонкая разделительная линия
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+                // Протектор — ромбики/полоски по краю
+                const count = 40;
+                const angleStep = (2 * Math.PI) / count;
+                const innerR = radius + 6;
+                const outerR = outerRadius - 4;
+                for (let i = 0; i < count; i++) {
+                    const a = i * angleStep + rotation;
+                    const x1 = cx + innerR * Math.cos(a);
+                    const y1 = cy + innerR * Math.sin(a);
+                    const x2 = cx + outerR * Math.cos(a);
+                    const y2 = cy + outerR * Math.sin(a);
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = (i % 2 === 0) ? 'rgba(200,200,200,0.25)' : 'rgba(0,0,0,0.35)';
+                    ctx.lineWidth = 6;
+                    ctx.stroke();
+                }
 
-                // Текст в секторе (без иконок)
-                const mid = start + angleStep / 2;
-                const textR = radius * 0.68;
-                const tx = cx + textR * Math.cos(mid);
-                const ty = cy + textR * Math.sin(mid);
-
-                ctx.save();
-                ctx.translate(tx, ty);
-                let rot = mid;
-                if (mid > Math.PI/2 && mid < 3*Math.PI/2) rot += Math.PI;
-                ctx.rotate(rot);
-
-                ctx.font = 'bold 18px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(0,0,0,0.8)';
-                ctx.shadowBlur = 10;
-                ctx.fillStyle = '#fff';
-                ctx.fillText(slot.label, 0, 0);
-                ctx.shadowBlur = 0;
-                ctx.restore();
-            }
-
-            // Рисуем спицы (между секторами) — толстые линии от центра к краю
-            for (let i = 0; i < SEGMENTS; i++) {
-                const angle = i * angleStep + rotation + angleStep/2;
-                const x1 = cx + 20 * Math.cos(angle);
-                const y1 = cy + 20 * Math.sin(angle);
-                const x2 = cx + (radius - 10) * Math.cos(angle);
-                const y2 = cy + (radius - 10) * Math.sin(angle);
-
+                // Боковая канавка
                 ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.strokeStyle = 'rgba(180,180,180,0.4)';
-                ctx.lineWidth = 6;
+                ctx.arc(cx, cy, radius + 2, 0, 2 * Math.PI);
+                ctx.strokeStyle = 'rgba(200,200,200,0.2)';
+                ctx.lineWidth = 2;
                 ctx.stroke();
-                // Блик на спице
+
+                // Внешний обод
+                ctx.beginPath();
+                ctx.arc(cx, cy, outerRadius - 2, 0, 2 * Math.PI);
                 ctx.strokeStyle = 'rgba(255,255,255,0.08)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
             }
 
-            // Центральный круг (ступица) — будет поверх логотипа, но логотип рисуем отдельно
-        }
+            // ----- Отрисовка диска (секторы + спицы) -----
+            function drawDisc(rotation) {
+                const angleStep = (2 * Math.PI) / SEGMENTS;
 
-        // ----- Отрисовка логотипа в центре -----
-        function drawLogo() {
-            const centerR = 52; // радиус центральной зоны
-            // Фон под лого (чтобы скрыть секторы)
-            ctx.beginPath();
-            ctx.arc(cx, cy, centerR, 0, 2 * Math.PI);
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(255,215,0,0.5)';
-            ctx.lineWidth = 4;
-            ctx.stroke();
+                // Секторы
+                for (let i = 0; i < SEGMENTS; i++) {
+                    const start = i * angleStep + rotation;
+                    const end = start + angleStep;
+                    const slot = SLOTS[i];
 
-            if (logoLoaded && logoImg.complete) {
-                // Рисуем логотип с обрезкой по кругу
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(cx, cy, centerR - 6, 0, 2 * Math.PI);
-                ctx.closePath();
-                ctx.clip();
-                const size = (centerR - 6) * 2;
-                ctx.drawImage(logoImg, cx - size/2, cy - size/2, size, size);
-                ctx.restore();
-            } else {
-                // Заглушка
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 18px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Лого', cx, cy);
-            }
+                    // Градиент сектора
+                    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+                    grad.addColorStop(0, slot.color1);
+                    grad.addColorStop(1, slot.color2);
 
-            // Декоративный ободок
-            ctx.beginPath();
-            ctx.arc(cx, cy, centerR, 0, 2 * Math.PI);
-            ctx.strokeStyle = 'rgba(255,215,0,0.25)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, radius, start, end);
+                    ctx.closePath();
+                    ctx.fillStyle = grad;
+                    ctx.fill();
 
-        // ----- Главная функция отрисовки колеса -----
-        function drawWheel(rotation) {
-            ctx.clearRect(0, 0, W, H);
+                    // ★ Убираем все разделительные линии между секторами (уже закомментировано)
 
-            // 1. Шина (не вращается)
-            drawTire(0);
+                    // Текст в секторе
+                    const mid = start + angleStep / 2;
+                    const textR = radius * 0.68;
+                    const tx = cx + textR * Math.cos(mid);
+                    const ty = cy + textR * Math.sin(mid);
 
-            // 2. Диск с секторами (вращается)
-            drawDisc(rotation);
+                    ctx.save();
+                    ctx.translate(tx, ty);
+                    let rot = mid;
+                    if (mid > Math.PI / 2 && mid < 3 * Math.PI / 2) rot += Math.PI;
+                    ctx.rotate(rot);
 
-            // 3. Логотип (не вращается)
-            drawLogo();
+                    ctx.font = 'bold 20px "Segoe UI", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowColor = 'transparent';
+                    ctx.fillStyle = '#fff';
+                    ctx.shadowBlur = 0;
+                    ctx.fillText(slot.label, 0, 0);
+                    ctx.restore();
+                }
 
-            // Дополнительные блики (для объёма)
-            const glow = ctx.createRadialGradient(cx-80, cy-80, 0, cx, cy, outerRadius);
-            glow.addColorStop(0, 'rgba(255,255,255,0.04)');
-            glow.addColorStop(1, 'rgba(255,255,255,0)');
-            ctx.beginPath();
-            ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
-            ctx.fillStyle = glow;
-            ctx.fill();
-        }
+                // Спицы (как у автомобильного диска)
+                for (let i = 0; i < SEGMENTS; i++) {
+                    const angle = i * angleStep + rotation + angleStep / 2;
+                    const innerR = 56; // от центра
+                    const outerR = radius - 10;
+                    const x1 = cx + innerR * Math.cos(angle);
+                    const y1 = cy + innerR * Math.sin(angle);
+                    const x2 = cx + outerR * Math.cos(angle);
+                    const y2 = cy + outerR * Math.sin(angle);
 
-        // ----- Определение победившего слота -----
-        function getSlotIndex(rotation) {
-            const pointerAngle = -Math.PI / 2;
-            let raw = pointerAngle - rotation;
-            raw = ((raw % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-            const angleStep = (2 * Math.PI) / SEGMENTS;
-            return Math.floor(raw / angleStep) % SEGMENTS;
-        }
-
-        // ----- Обновить результат -----
-        function updateResult(index) {
-            const slot = SLOTS[index];
-            resultValue.innerHTML = `<span class="text">${slot.label}</span>`;
-            resultBox.className = 'result-box slot-' + slot.id;
-        }
-
-        // ----- Анимация вращения -----
-        function spinWheel() {
-            if (isSpinning) return;
-            if (!logoLoaded) {
-                // Если лого ещё не загружен, можно всё равно крутить, но предупредим
-                console.warn('Логотип ещё не загружен, но колесо работает');
-            }
-            isSpinning = true;
-            spinBtn.disabled = true;
-
-            const extraSpins = 5 + Math.random() * 5;
-            const targetAngle = currentRotation + extraSpins * 2 * Math.PI + (Math.random() * 2 * Math.PI);
-            const startAngle = currentRotation;
-            const duration = 5500 + Math.random() * 2000;
-            const startTime = performance.now();
-
-            function animate(time) {
-                const elapsed = time - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-
-                currentRotation = startAngle + (targetAngle - startAngle) * eased;
-                drawWheel(currentRotation);
-
-                if (progress < 1) {
-                    animId = requestAnimationFrame(animate);
-                } else {
-                    currentRotation = targetAngle;
-                    drawWheel(currentRotation);
-                    const idx = getSlotIndex(currentRotation);
-                    updateResult(idx);
-                    launchConfetti();
-                    isSpinning = false;
-                    spinBtn.disabled = false;
+                    // Основная спица
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = 'rgba(200, 200, 200, 0.45)';
+                    ctx.lineWidth = 12;
+                    ctx.stroke();
+                    // Световой блик
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                    ctx.lineWidth = 4;
+                    ctx.stroke();
                 }
             }
-            animId = requestAnimationFrame(animate);
-        }
 
-        // ----- Конфетти (без изменений) -----
-        const confettiCanvas = document.getElementById('confetti-canvas');
-        const cctx = confettiCanvas.getContext('2d');
-        let confettiPieces = [];
-        let confettiAnimId = null;
+            // ----- Отрисовка центра (без логотипа) -----
+            function drawCenterWithoutLogo() {
+                const centerR = 52;
+                // Просто тёмная ступица
+                const grad = ctx.createRadialGradient(cx - 10, cy - 10, 0, cx, cy, centerR);
+                grad.addColorStop(0, '#2d3436');
+                grad.addColorStop(1, '#0a0d12');
+                ctx.beginPath();
+                ctx.arc(cx, cy, centerR, 0, 2 * Math.PI);
+                ctx.fillStyle = grad;
+                ctx.fill();
 
-        function resizeConfetti() {
-            confettiCanvas.width = window.innerWidth;
-            confettiCanvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeConfetti);
-        resizeConfetti();
-
-        function launchConfetti() {
-            confettiPieces = [];
-            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#ff8a5c', '#a29bfe', '#fd79a8', '#00b894', '#fdcb6e', '#e17055'];
-            for (let i = 0; i < 180; i++) {
-                confettiPieces.push({
-                    x: Math.random() * confettiCanvas.width,
-                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
-                    w: 6 + Math.random() * 8,
-                    h: 4 + Math.random() * 6,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    vx: (Math.random() - 0.5) * 2.5,
-                    vy: 2 + Math.random() * 4,
-                    rot: Math.random() * 360,
-                    rotSpeed: (Math.random() - 0.5) * 12,
-                    gravity: 0.04 + Math.random() * 0.04,
-                });
+                // Тонкий ободок
+                ctx.strokeStyle = 'rgba(255,215,0,0.15)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
             }
-            if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
-            animateConfetti();
-        }
 
-        function animateConfetti() {
-            cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            let alive = false;
-            for (const p of confettiPieces) {
-                p.x += p.vx;
-                p.vy += p.gravity;
-                p.y += p.vy;
-                p.rot += p.rotSpeed;
-                if (p.y < confettiCanvas.height + 20) alive = true;
-                cctx.save();
-                cctx.translate(p.x, p.y);
-                cctx.rotate((p.rot * Math.PI) / 180);
-                cctx.fillStyle = p.color;
-                cctx.globalAlpha = Math.max(0, 1 - (p.y / confettiCanvas.height) * 0.5);
-                cctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-                cctx.restore();
+            // ----- Главная отрисовка -----
+            function drawWheel(rotation) {
+                ctx.clearRect(0, 0, W, H);
+                drawTire(0);
+                drawDisc(rotation);
+                drawCenterWithoutLogo(); // центральный логотип убран
+
+                // Глянцевый блик сверху
+                const glow = ctx.createRadialGradient(cx - 80, cy - 80, 0, cx, cy, outerRadius);
+                glow.addColorStop(0, 'rgba(255,255,255,0.06)');
+                glow.addColorStop(1, 'rgba(255,255,255,0)');
+                ctx.beginPath();
+                ctx.arc(cx, cy, outerRadius, 0, 2 * Math.PI);
+                ctx.fillStyle = glow;
+                ctx.fill();
             }
-            if (alive) {
-                confettiAnimId = requestAnimationFrame(animateConfetti);
-            } else {
+
+            // ----- Определение слота -----
+            function getSlotIndex(rotation) {
+                const pointerAngle = -Math.PI / 2;
+                let raw = pointerAngle - rotation;
+                raw = ((raw % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+                const angleStep = (2 * Math.PI) / SEGMENTS;
+                return Math.floor(raw / angleStep) % SEGMENTS;
+            }
+
+            // ----- Обновить результат -----
+            function updateResult(index) {
+                const slot = SLOTS[index];
+                resultValue.innerHTML = `<span class="text">${slot.label}</span>`;
+                resultBox.className = 'result-box slot-' + slot.id;
+            }
+
+            // ----- Обновление кнопки с таймером (1 минута) -----
+            function updateCooldownButton() {
+                if (!cooldownInterval) return;
+                const now = Date.now();
+                const remaining = Math.max(0, cooldownUntil - now);
+                if (remaining <= 0) {
+                    clearInterval(cooldownInterval);
+                    cooldownInterval = null;
+                    spinBtn.disabled = false;
+                    spinBtn.textContent = '🎯 Крутить';
+                    return;
+                }
+                const seconds = Math.floor(remaining / 1000);
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                spinBtn.textContent = `⏳ Подождите ${mins}:${secs.toString().padStart(2, '0')}`;
+                spinBtn.disabled = true;
+            }
+
+            // ----- Запуск таймера на 1 минуту -----
+            function startCooldown() {
+                if (cooldownInterval) {
+                    clearInterval(cooldownInterval);
+                    cooldownInterval = null;
+                }
+                cooldownUntil = Date.now() + 60000; // 1 минута
+                spinBtn.disabled = true;
+                updateCooldownButton();
+                cooldownInterval = setInterval(updateCooldownButton, 1000);
+            }
+
+            // ----- Проверка, можно ли крутить -----
+            function canSpin() {
+                return !isSpinning && Date.now() >= cooldownUntil;
+            }
+
+            // ----- Вращение -----
+            function spinWheel() {
+                if (!canSpin()) return;
+                isSpinning = true;
+                spinBtn.disabled = true;
+
+                const extraSpins = 5 + Math.random() * 5;
+                const targetAngle = currentRotation + extraSpins * 2 * Math.PI + (Math.random() * 2 * Math.PI);
+                const startAngle = currentRotation;
+                const duration = 5500 + Math.random() * 2000;
+                const startTime = performance.now();
+
+                function animate(time) {
+                    const elapsed = time - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+
+                    currentRotation = startAngle + (targetAngle - startAngle) * eased;
+                    drawWheel(currentRotation);
+
+                    if (progress < 1) {
+                        animId = requestAnimationFrame(animate);
+                    } else {
+                        currentRotation = targetAngle;
+                        drawWheel(currentRotation);
+                        const idx = getSlotIndex(currentRotation);
+                        updateResult(idx);
+                        isSpinning = false;
+
+                        // Конфетти только если не "Пусто"
+                        const slot = SLOTS[idx];
+                        if (slot.id !== 'empty') {
+                            launchConfetti();
+                        }
+
+                        startCooldown(); // 1 минута
+                    }
+                }
+                animId = requestAnimationFrame(animate);
+            }
+
+            // ----- Конфетти -----
+            const confettiCanvas = document.getElementById('confetti-canvas');
+            const cctx = confettiCanvas.getContext('2d');
+            let confettiPieces = [];
+            let confettiAnimId = null;
+
+            function resizeConfetti() {
+                confettiCanvas.width = window.innerWidth;
+                confettiCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeConfetti);
+            resizeConfetti();
+
+            function launchConfetti() {
+                confettiPieces = [];
+                const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#ff8a5c', '#a29bfe', '#fd79a8', '#00b894',
+                    '#fdcb6e', '#e17055'
+                ];
+                for (let i = 0; i < 180; i++) {
+                    confettiPieces.push({
+                        x: Math.random() * confettiCanvas.width,
+                        y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                        w: 6 + Math.random() * 8,
+                        h: 4 + Math.random() * 6,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        vx: (Math.random() - 0.5) * 2.5,
+                        vy: 2 + Math.random() * 4,
+                        rot: Math.random() * 360,
+                        rotSpeed: (Math.random() - 0.5) * 12,
+                        gravity: 0.04 + Math.random() * 0.04,
+                    });
+                }
+                if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+                animateConfetti();
+            }
+
+            function animateConfetti() {
                 cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                let alive = false;
+                for (const p of confettiPieces) {
+                    p.x += p.vx;
+                    p.vy += p.gravity;
+                    p.y += p.vy;
+                    p.rot += p.rotSpeed;
+                    if (p.y < confettiCanvas.height + 20) alive = true;
+                    cctx.save();
+                    cctx.translate(p.x, p.y);
+                    cctx.rotate((p.rot * Math.PI) / 180);
+                    cctx.fillStyle = p.color;
+                    cctx.globalAlpha = Math.max(0, 1 - (p.y / confettiCanvas.height) * 0.5);
+                    cctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    cctx.restore();
+                }
+                if (alive) {
+                    confettiAnimId = requestAnimationFrame(animateConfetti);
+                } else {
+                    cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                }
             }
-        }
 
-        // ----- Инициализация -----
-        function init() {
-            // Начинаем с нулевого вращения
-            currentRotation = 0;
-            drawWheel(0);
-            updateResult(0);
-        }
-
-        // ----- События -----
-        spinBtn.addEventListener('click', spinWheel);
-        canvas.addEventListener('click', spinWheel);
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            spinWheel();
-        }, { passive: false });
-
-        resultBox.addEventListener('click', () => {
-            if (confettiAnimId) {
-                cancelAnimationFrame(confettiAnimId);
-                confettiAnimId = null;
-                cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            // ----- Инициализация -----
+            function init() {
+                currentRotation = 0;
+                drawWheel(0);
+                updateResult(0);
             }
-        });
 
-        // Запуск после загрузки логотипа (или сразу)
-        if (logoImg.complete && logoImg.naturalWidth) {
-            logoLoaded = true;
-        }
-        // Всё равно вызываем init, лого отрисуется, когда загрузится
-        init();
+            // ----- События -----
+            spinBtn.addEventListener('click', spinWheel);
+            canvas.addEventListener('click', spinWheel);
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                spinWheel();
+            }, { passive: false });
 
-        console.log('🚗 Автомобильное колесо-рулетка загружено!');
-    })();
-</script>
-</body>
-</html>
+            resultBox.addEventListener('click', () => {
+                if (confettiAnimId) {
+                    cancelAnimationFrame(confettiAnimId);
+                    confettiAnimId = null;
+                    cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                }
+            });
+
+            init();
+            console.log('🚗 Автомобильное колесо-рулетка загружено!');
+        })();
+    </script>
+
+</body></html>
